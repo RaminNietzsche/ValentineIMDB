@@ -40,8 +40,6 @@ def get_data(file):
 	if res['Response'] == 'False':
 		res = search_move(data['name'])
 	res['name'] = data['name'] 
-	if 'Poster' in res.keys():
-		process_img(res['Poster'], res['name'])
 	to_db(res)
 
 def search_move(name):

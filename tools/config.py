@@ -16,7 +16,16 @@ bad_char = ['.', '-', '_']
 defaults = {
         'update_last_checked': '0',
         'db_version': '0.1',
+        'proxy' : 'http'
 }
+
+http_proxy  = "socks4://127.0.0.1:2222"
+https_proxy = "10.10.1.11:1080"
+ftp_proxy   = "10.10.1.10:3128"
+
+proxyDict = { 
+              "http"  : http_proxy, 
+            }
 
 img_size = '300'
 

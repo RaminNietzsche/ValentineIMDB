@@ -1,15 +1,20 @@
 #!/usr/bin/python
 
-import os
-from subprocess import call
-import sys
 import sqlite3
 import re
-import threading
 import config
-import requests
-import Queue
-import time
+import os, sys
+
+if config.defaults['proxy'] != 'None':
+    set_proxy = True
+    try:
+        import requesocks as requests
+    except Exception, e:
+        set_proxy = False
+        import requests
+else:
+    set_proxy = False
+    import requests
 
 def create_database(conn, cur):
     cur.execute('''CREATE TABLE movies (
@@ -53,7 +58,7 @@ def add_to_db(filename, file_data, conn, cur):
     if 'Plot' not in file_data.keys():
         file_data['Plot'] = "----"
     if 'Poster' not in file_data.keys():
-        file_data['Poster'] = "----"
+        file_data['Poster'] = "N/A"
     if 'imdbID' not in file_data.keys():
         file_data['imdbID'] = "----"
     
@@ -80,6 +85,10 @@ def add_to_db(filename, file_data, conn, cur):
 
     cur.execute('INSERT INTO movies VALUES(?,?,?,?,?,?,?,?,?,?)',
             tuple(args_mv))
+
+    if 'Poster' in file_data.keys():
+        process_img(file_data['Poster'], file_data['name'])
+
     conn.commit()
 
 def process_img(poster, filename):
@@ -89,7 +98,10 @@ def process_img(poster, filename):
     img_file = os.path.join(config.images_folder, filename + '.jpg')
     img_fh = open(img_file, 'wb')
     try:
-        img_fh.write(requests.get(img_url).content)
+        if set_proxy :
+            img_fh.write(requests.get(img_url ,proxies=config.proxyDict).content)
+        else:
+            img_fh.write(requests.get(img_url).content)
     except requests.RequestException, e:
         # do nothing?
         pass
