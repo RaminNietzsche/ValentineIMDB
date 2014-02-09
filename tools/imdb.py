@@ -5,6 +5,16 @@ def get_data(data):
 	url = 'http://www.omdbapi.com/?t=%s&y=%s' %(data['name'], data['year'])
 	response = requests.get(url);
 	res = response.json()
+	if res['Response'] == 'False':
+		res = search_move(data['name'])
 	res['name'] = data['name']
-	# print data['Plot']
-	return data
+	return res
+
+def search_move(name):
+	url = 'http://www.omdbapi.com/?s=%s' %(name)
+	response = requests.get(url);
+	res = response.json()
+	url = 'http://www.omdbapi.com/?i=%s' %(res['Search'][0]['imdbID'])
+	response = requests.get(url);
+	res = response.json()
+	return res

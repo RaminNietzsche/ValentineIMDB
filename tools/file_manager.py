@@ -17,7 +17,7 @@ def find(pattern, path):
 
 res = []
 for types in config.movie_formats:
-	f = find('*.'+types, '/file/Backup/Download/film')
+	f = find('*.'+types, '/file/Backup/Download/film/30/')
 	for item in f:
 		data = {}
 		data['address'] = item
@@ -41,10 +41,16 @@ for types in config.movie_formats:
 
 for item in res:
 	print 'Name: %s' %(item['name'])
-	if 'Title' in item.keys():
+	try:
 		print 'Title: %s' %(item['Title'])
-	if 'Year' in item.keys():
+	except :
+		pass
+	try:
 		print 'Year: %s' %(item['Year'])
-	if 'imdbRating' in item.keys():
+	except :
+		pass		
+	try:
 		print 'Rate: %s' %(item['imdbRating'])
+	except :
+		pass		
 	print '----------'
