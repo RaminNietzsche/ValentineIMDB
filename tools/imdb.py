@@ -14,7 +14,10 @@ def search_move(name):
 	url = 'http://www.omdbapi.com/?s=%s' %(name)
 	response = requests.get(url);
 	res = response.json()
-	url = 'http://www.omdbapi.com/?i=%s' %(res['Search'][0]['imdbID'])
-	response = requests.get(url);
-	res = response.json()
+	if res['Response'] == 'False':
+		res['Title'] = "404! -----> kolan Not Found ;)"
+	else:
+		url = 'http://www.omdbapi.com/?i=%s' %(res['Search'][0]['imdbID'])
+		response = requests.get(url);
+		res = response.json()
 	return res
