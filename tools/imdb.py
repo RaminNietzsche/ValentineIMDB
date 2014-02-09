@@ -4,6 +4,7 @@ import time
 import threading
 from text import simple_normalize
 import datetime
+from DBbuilder import process_img
 
 def Runner(files):
 	threads = []
@@ -38,7 +39,9 @@ def get_data(file):
 	res = response.json()
 	if res['Response'] == 'False':
 		res = search_move(data['name'])
-	res['name'] = data['name']
+	res['name'] = data['name'] 
+	if 'Poster' in res.keys():
+		process_img(res['Poster'], res['name'])
 	to_db(res)
 
 def search_move(name):
